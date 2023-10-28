@@ -2,7 +2,7 @@ Task:
   ✔ Meteor TNT - Has a meteor falls at location of explosion
   ✔ Snow TNT - Changes area to snow
   ✔ Ocean TNT - covers area in water
-  ☐ Freeze TNT - changes area to ice
+  ✔ Freeze TNT - changes area to ice
   ☐ Arrow TNT - arrows rain down from above
   ☐ Volcano TNT - when exploes, shoots tnt into sky that then fall down and explode
   ☐ Gravity TNT - sucks people in within range and then explodes

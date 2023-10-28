@@ -9,6 +9,7 @@ import {
   raw,
   rel,
   schedule,
+  setblock,
   summon,
 } from "sandstone";
 import { self } from "../Tick";
@@ -31,6 +32,7 @@ export const setTntblock = MCFunction("custom_tnt/setblock", () => {
       );
       placeAndCreateFunction("give_snow", "Snow TNT", "snow", 120002);
       placeAndCreateFunction("give_water", "Water TNT", "water", 120003);
+      placeAndCreateFunction("give_ice", "Ice TNT", "ice", 120004);
     });
 });
 
@@ -204,6 +206,58 @@ export const handler = MCFunction("custom_tnt/handler", () => {
             },
             "5t",
             "append"
+          );
+        },
+        null,
+        null
+      );
+      explosionHandler(
+        "tnt.ice",
+        100,
+        () => {
+          particle(
+            "minecraft:block",
+            "minecraft:blue_ice",
+            rel(0, 0.8, 0),
+            [0, 0.2, 0],
+            0,
+            4,
+            "force"
+          );
+          particle(
+            "minecraft:block",
+            "minecraft:ice",
+            rel(0, 0.8, 0),
+            [0, 0.2, 0],
+            0,
+            4,
+            "force"
+          );
+        },
+        () => {
+          // Circle Generation
+          let ice: Array<string> = ["minecraft:ice", "minecraft:blue_ice"];
+
+          for (let i = 1; i <= 8; i += 1) {
+            for (let j = 0; j <= 50; j += 1) {
+              setblock(
+                rel(
+                  Math.round(Math.sin(j) * i),
+                  -1,
+                  Math.round(Math.cos(j) * i)
+                ),
+                `${ice[Math.floor(Math.random() * ice.length)]}`
+              );
+            }
+          }
+          particle(
+            "minecraft:block",
+            "minecraft:ice",
+            rel(0, 0.5, 0),
+            [6, 0, 6],
+            0.1,
+            500,
+            "force"
           );
         },
         null,
