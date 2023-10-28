@@ -94,6 +94,7 @@ export const handler = MCFunction("custom_tnt/handler", () => {
           );
         },
         () => {
+          // Square
           // for (let i = -6; i <= 6; i += 1) {
           //   for (let j = -6; j <= 6; j += 1) {
           //     fill(
@@ -103,6 +104,8 @@ export const handler = MCFunction("custom_tnt/handler", () => {
           //     );
           //   }
           // }
+
+          // Circle
           for (let i = 1; i <= 8; i += 1) {
             for (let j = 0; j <= 50; j += 1) {
               // setblock(
