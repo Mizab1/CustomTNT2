@@ -4,10 +4,11 @@ import {
   Selector,
   execute,
   fill,
+  kill,
   particle,
   raw,
   rel,
-  setblock,
+  schedule,
   summon,
 } from "sandstone";
 import { self } from "../Tick";
@@ -15,7 +16,6 @@ import {
   explosionHandler,
   placeAndCreateFunction,
 } from "./private/SetupGenerics";
-import { randomIntFromInterval } from "../Utils/Functions";
 
 export const setTntblock = MCFunction("custom_tnt/setblock", () => {
   execute
@@ -30,6 +30,7 @@ export const setTntblock = MCFunction("custom_tnt/setblock", () => {
         120001
       );
       placeAndCreateFunction("give_snow", "Snow TNT", "snow", 120002);
+      placeAndCreateFunction("give_water", "Water TNT", "water", 120003);
     });
 });
 
@@ -134,10 +135,75 @@ export const handler = MCFunction("custom_tnt/handler", () => {
           particle(
             "minecraft:snowflake",
             rel(0, 0.5, 0),
-            [10, 10, 10],
+            [8, 8, 8],
             0.1,
             5000,
             "force"
+          );
+        },
+        null,
+        null
+      );
+      explosionHandler(
+        "tnt.water",
+        100,
+        () => {
+          particle(
+            "minecraft:splash",
+            rel(0, 0.8, 0),
+            [0.1, 0.5, 0.1],
+            0.1,
+            25,
+            "force"
+          );
+          particle(
+            "minecraft:falling_water",
+            rel(0, 0.8, 0),
+            [0.5, 0.2, 0.5],
+            0.1,
+            10,
+            "force"
+          );
+        },
+        () => {
+          summon("minecraft:creeper", rel(0, 0, 0), {
+            Fuse: 0,
+            ignited: NBT.byte(1),
+            ExplosionRadius: NBT.byte(4),
+          });
+          summon("minecraft:marker", rel(0, 0, 0), {
+            Tags: ["water_hole_marker"],
+          });
+
+          schedule.function(
+            () => {
+              execute
+                .as(
+                  Selector("@e", {
+                    type: "minecraft:marker",
+                    tag: "water_hole_marker",
+                  })
+                )
+                .at(self)
+                .run(() => {
+                  fill(
+                    rel(6, -1, 6),
+                    rel(-6, -6, -6),
+                    "minecraft:water replace minecraft:air"
+                  );
+                  particle(
+                    "minecraft:splash",
+                    rel(0, 0.8, 0),
+                    [2, 0.1, 2],
+                    0.1,
+                    60,
+                    "force"
+                  );
+                  kill(self);
+                });
+            },
+            "5t",
+            "append"
           );
         },
         null,
