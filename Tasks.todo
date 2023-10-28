@@ -1,6 +1,6 @@
 Task:
-  ☐ Meteor TNT - Has a meteor falls at location of explosion
-  ☐ Snow TNT - Changes area to snow
+  ✔ Meteor TNT - Has a meteor falls at location of explosion
+  ✔ Snow TNT - Changes area to snow
   ☐ Ocean TNT - covers area in water
   ☐ Freeze TNT - changes area to ice
   ☐ Arrow TNT - arrows rain down from above
