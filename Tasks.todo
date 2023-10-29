@@ -5,7 +5,7 @@ Task:
   ✔ Freeze TNT - changes area to ice
   ✔ Arrow TNT - arrows rain down from above
   ✔ Volcano TNT - when exploes, shoots tnt into sky that then fall down and explode
-  ☐ Gravity TNT - sucks people in within range and then explodes
+  ✔ Gravity TNT - sucks people in within range and then explodes
   ☐ Ghost TNT - explodes and gives darkness
   ☐ Ender TNT - Those within explosion get teleported a shot range around
   ☐ inverted TNT - when explodes instead of breaking blocks it sets dirt blocks in an explosion radius
@@ -16,3 +16,4 @@ Test:
   ☐ When someone dies to a tnt, have it not say creeper killed in chat, either TNT or generic "Boom"
   ☐ More power to grav gun so that the tnt can be shot farther
   ☐ TNT textures break when touching other TNT
+  ☐ Test Gravity TNT on a generated world

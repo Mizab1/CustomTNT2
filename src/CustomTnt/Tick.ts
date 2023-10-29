@@ -10,6 +10,7 @@ import {
   rel,
   schedule,
   setblock,
+  spreadplayers,
   summon,
 } from "sandstone";
 import { self } from "../Tick";
@@ -35,6 +36,7 @@ export const setTntblock = MCFunction("custom_tnt/setblock", () => {
       placeAndCreateFunction("give_ice", "Ice TNT", "ice", 120004);
       placeAndCreateFunction("give_arrow", "Arrow TNT", "arrow", 120005);
       placeAndCreateFunction("give_volcano", "Volcano TNT", "volcano", 120006);
+      placeAndCreateFunction("give_gravity", "Gravity TNT", "gravity", 120007);
     });
 });
 
@@ -174,6 +176,7 @@ export const handler = MCFunction("custom_tnt/handler", () => {
             Fuse: 0,
             ignited: NBT.byte(1),
             ExplosionRadius: NBT.byte(4),
+            CustomName: '{"text":"TNT","italic":false}',
           });
           summon("minecraft:marker", rel(0, 0, 0), {
             Tags: ["water_hole_marker"],
@@ -360,7 +363,60 @@ export const handler = MCFunction("custom_tnt/handler", () => {
             Fuse: 0,
             ignited: NBT.byte(1),
             ExplosionRadius: NBT.byte(3),
+            CustomName: '{"text":"TNT","italic":false}',
           });
+        },
+        null,
+        null
+      );
+      explosionHandler(
+        "tnt.gravity",
+        100,
+        () => {
+          particle(
+            "minecraft:portal",
+            rel(0, 0.8, 0),
+            [0.5, 0.5, 0.5],
+            0,
+            2,
+            "force"
+          );
+          particle(
+            "minecraft:reverse_portal",
+            rel(0, 0.8, 0),
+            [0, 0.3, 0],
+            0.01,
+            4,
+            "force"
+          );
+        },
+        () => {
+          spreadplayers(
+            rel(0, 0),
+            2,
+            6,
+            false,
+            Selector("@e", {
+              type: "#aestd1:living_base",
+              distance: [Infinity, 50],
+              limit: 15,
+              sort: "nearest",
+            })
+          );
+          summon("minecraft:creeper", rel(0, 0, 0), {
+            Fuse: 1,
+            ignited: NBT.byte(1),
+            ExplosionRadius: NBT.byte(10),
+            CustomName: '{"text":"TNT","italic":false}',
+          });
+          particle(
+            "minecraft:portal",
+            rel(0, 0.8, 0),
+            [3, 3, 3],
+            0,
+            2000,
+            "force"
+          );
         },
         null,
         null
