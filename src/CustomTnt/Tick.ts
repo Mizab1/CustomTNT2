@@ -34,6 +34,7 @@ export const setTntblock = MCFunction("custom_tnt/setblock", () => {
       placeAndCreateFunction("give_water", "Water TNT", "water", 120003);
       placeAndCreateFunction("give_ice", "Ice TNT", "ice", 120004);
       placeAndCreateFunction("give_arrow", "Arrow TNT", "arrow", 120005);
+      placeAndCreateFunction("give_volcano", "Volcano TNT", "volcano", 120006);
     });
 });
 
@@ -296,6 +297,70 @@ export const handler = MCFunction("custom_tnt/handler", () => {
               });
             }
           }
+        },
+        null,
+        null
+      );
+      explosionHandler(
+        "tnt.volcano",
+        100,
+        () => {
+          particle(
+            "minecraft:block",
+            "minecraft:magma_block",
+            rel(0, 0.8, 0),
+            [0.5, 0.5, 0.5],
+            0,
+            2,
+            "force"
+          );
+          particle(
+            "minecraft:flame",
+            rel(0, 0.8, 0),
+            [0, 0.3, 0],
+            0.01,
+            4,
+            "force"
+          );
+        },
+        () => {
+          // Circle Generation
+          let volcanicBlocks: Array<string> = [
+            "minecraft:magma_block",
+            "minecraft:netherrack",
+          ];
+
+          for (let i = -10; i <= 10; i += 1) {
+            for (let j = -10; j <= 10; j += 1) {
+              fill(
+                rel(i, -1, j),
+                rel(i, -6, j),
+                `${
+                  volcanicBlocks[
+                    Math.floor(Math.random() * volcanicBlocks.length)
+                  ]
+                } replace #aestd1:all_but_air`
+              );
+            }
+          }
+
+          for (let i = 0; i <= 10; i += 1) {
+            // summon("minecraft:tnt", rel(Math.sin(i), 0.5, Math.cos(i)), {
+            //   Fuse: 40,
+            // });
+            summon("minecraft:tnt", rel(Math.sin(i), 0.2, Math.cos(i)), {
+              Fuse: 20,
+            });
+            summon("minecraft:tnt", rel(Math.sin(i), 0.8, Math.cos(i)), {
+              Fuse: 20,
+            });
+          }
+
+          summon("minecraft:creeper", rel(0, 0, 0), {
+            Fuse: 0,
+            ignited: NBT.byte(1),
+            ExplosionRadius: NBT.byte(3),
+          });
         },
         null,
         null
