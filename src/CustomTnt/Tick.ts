@@ -33,6 +33,7 @@ export const setTntblock = MCFunction("custom_tnt/setblock", () => {
       placeAndCreateFunction("give_snow", "Snow TNT", "snow", 120002);
       placeAndCreateFunction("give_water", "Water TNT", "water", 120003);
       placeAndCreateFunction("give_ice", "Ice TNT", "ice", 120004);
+      placeAndCreateFunction("give_arrow", "Arrow TNT", "arrow", 120005);
     });
 });
 
@@ -259,6 +260,42 @@ export const handler = MCFunction("custom_tnt/handler", () => {
             500,
             "force"
           );
+        },
+        null,
+        null
+      );
+      explosionHandler(
+        "tnt.arrow",
+        100,
+        () => {
+          particle(
+            "minecraft:crit",
+            rel(0, 0.8, 0),
+            [0.5, 0.5, 0.5],
+            0,
+            2,
+            "force"
+          );
+          particle(
+            "minecraft:item",
+            "minecraft:arrow",
+            rel(0, 1.3, 0),
+            [0, 0.3, 0],
+            0,
+            4,
+            "force"
+          );
+        },
+        () => {
+          // Square Generation
+          for (let i = -10; i <= 10; i += 1) {
+            for (let j = -10; j <= 10; j += 1) {
+              summon("minecraft:arrow", rel(i, 30, j));
+              summon("minecraft:arrow", rel(i, 60, j), {
+                Potion: "minecraft:poison",
+              });
+            }
+          }
         },
         null,
         null
