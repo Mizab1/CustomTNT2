@@ -18,6 +18,7 @@ import {
   explosionHandler,
   placeAndCreateFunction,
 } from "./private/SetupGenerics";
+import { randomIntFromInterval } from "../Utils/Functions";
 
 export const setTntblock = MCFunction("custom_tnt/setblock", () => {
   execute
@@ -294,10 +295,17 @@ export const handler = MCFunction("custom_tnt/handler", () => {
           // Square Generation
           for (let i = -10; i <= 10; i += 1) {
             for (let j = -10; j <= 10; j += 1) {
-              summon("minecraft:arrow", rel(i, 30, j));
-              summon("minecraft:arrow", rel(i, 60, j), {
-                Potion: "minecraft:poison",
-              });
+              summon(
+                "minecraft:arrow",
+                rel(i, randomIntFromInterval(30, 40), j)
+              );
+              summon(
+                "minecraft:arrow",
+                rel(i, randomIntFromInterval(60, 70), j),
+                {
+                  Potion: "minecraft:poison",
+                }
+              );
             }
           }
         },
