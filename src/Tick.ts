@@ -4,6 +4,7 @@ import { spawnSlime, teleportSlime } from "./CustomTnt/DisableSlots";
 import { decrementFuseTime } from "./CustomTnt/Fuse";
 import { handler, setTntblock } from "./CustomTnt/Tick";
 import { Fireball } from "./Objects/Fireball";
+import { AddDarkness } from "./CustomTnt/Auxillary/GhostTnt/AddDarkness";
 
 const fuseTimeObj = Objective.create("fuse_time_obj", "dummy");
 const rngObj = Objective.create("rng_obj", "dummy");
@@ -28,8 +29,9 @@ const tick = MCFunction(
     spawnSlime();
     decrementFuseTime();
 
-    // Add Gravity to the TNT
+    // Aux TNT functions
     AddGravity();
+    AddDarkness();
 
     // Fireball
     Fireball();

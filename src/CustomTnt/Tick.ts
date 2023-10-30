@@ -6,6 +6,7 @@ import {
   fill,
   kill,
   particle,
+  playsound,
   raw,
   rel,
   schedule,
@@ -38,6 +39,7 @@ export const setTntblock = MCFunction("custom_tnt/setblock", () => {
       placeAndCreateFunction("give_arrow", "Arrow TNT", "arrow", 120005);
       placeAndCreateFunction("give_volcano", "Volcano TNT", "volcano", 120006);
       placeAndCreateFunction("give_gravity", "Gravity TNT", "gravity", 120007);
+      placeAndCreateFunction("give_ghost", "Ghost TNT", "ghost", 120008);
     });
 });
 
@@ -424,6 +426,89 @@ export const handler = MCFunction("custom_tnt/handler", () => {
             0,
             2000,
             "force"
+          );
+        },
+        null,
+        null
+      );
+      explosionHandler(
+        "tnt.ghost",
+        100,
+        () => {
+          particle(
+            "minecraft:block",
+            "minecraft:black_concrete",
+            rel(0, 0.8, 0),
+            [0.5, 0.5, 0.5],
+            0,
+            2,
+            "force"
+          );
+          // @ts-ignore
+          particle(
+            "minecraft:dust",
+            [0, 0, 0],
+            1,
+            rel(0, 0.8, 0),
+            [0, 0.3, 0],
+            0.01,
+            4,
+            "force"
+          );
+        },
+        () => {
+          summon("minecraft:block_display", rel(0, 0, 0), {
+            transformation: {
+              left_rotation: [
+                NBT.float(0),
+                NBT.float(0),
+                NBT.float(0),
+                NBT.float(1),
+              ],
+              right_rotation: [
+                NBT.float(0),
+                NBT.float(0),
+                NBT.float(0),
+                NBT.float(1),
+              ],
+              translation: [NBT.float(-2.5), NBT.float(0), NBT.float(-2.5)],
+              scale: [NBT.float(5), NBT.float(5), NBT.float(5)],
+            },
+            block_state: { Name: "minecraft:black_concrete" },
+            Tags: ["ghost_block_display"],
+          });
+          playsound(
+            "minecraft:ambient.crimson_forest.mood",
+            "master",
+            "@a",
+            rel(0, 0, 0)
+          );
+          schedule.function(
+            () => {
+              execute
+                .as(
+                  Selector("@e", {
+                    type: "minecraft:block_display",
+                    tag: "ghost_block_display",
+                  })
+                )
+                .at(self)
+                .run(() => {
+                  kill(self);
+                  particle(
+                    // @ts-ignore
+                    "minecraft:dust",
+                    [0, 0, 0],
+                    1,
+                    rel(0, 0.8, 0),
+                    [3, 3, 3],
+                    0.1,
+                    5000
+                  );
+                });
+            },
+            "5s",
+            "replace"
           );
         },
         null,
