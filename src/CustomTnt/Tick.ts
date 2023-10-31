@@ -1,5 +1,6 @@
 import {
   MCFunction,
+  MCFunctionInstance,
   NBT,
   Selector,
   execute,
@@ -13,6 +14,7 @@ import {
   setblock,
   spreadplayers,
   summon,
+  tp,
 } from "sandstone";
 import { self } from "../Tick";
 import {
@@ -20,6 +22,7 @@ import {
   placeAndCreateFunction,
 } from "./private/SetupGenerics";
 import { randomIntFromInterval } from "../Utils/Functions";
+import { tpAhead } from "./Auxillary/InvertedTnt/TpAhead";
 
 export const setTntblock = MCFunction("custom_tnt/setblock", () => {
   execute
@@ -554,6 +557,83 @@ export const handler = MCFunction("custom_tnt/handler", () => {
               distance: [Infinity, 8],
             })
           );
+        },
+        null,
+        null
+      );
+      explosionHandler(
+        "tnt.inverted",
+        100,
+        () => {
+          particle(
+            // @ts-ignore
+            "minecraft:sonic_boom",
+            rel(0, 0.8, 0),
+            [0.5, 0.5, 0.5],
+            0,
+            1,
+            "force"
+          );
+          particle(
+            "minecraft:angry_villager",
+            rel(0, 0.8, 0),
+            [0, 0.3, 0],
+            0.01,
+            1,
+            "force"
+          );
+        },
+        () => {
+          summon("minecraft:marker", rel(0, 0, 0), {
+            Tags: ["inverted_tnt_anchor"],
+          });
+          for (let i = 0; i <= 10; i += 1) {
+            summon("minecraft:armor_stand", rel(Math.sin(i), 0, Math.cos(i)), {
+              Tags: ["block_placer_aS_0", "block_placer"],
+              Invisible: NBT.byte(1),
+            });
+            summon(
+              "minecraft:armor_stand",
+              rel(Math.sin(i), 0.5, Math.cos(i)),
+              {
+                Tags: ["block_placer_aS_30", "block_placer"],
+                Invisible: NBT.byte(1),
+              }
+            );
+            summon(
+              "minecraft:armor_stand",
+              rel(Math.sin(i), 1.5, Math.cos(i)),
+              {
+                Tags: ["block_placer_aS_60", "block_placer"],
+                Invisible: NBT.byte(1),
+              }
+            );
+          }
+          execute
+            .as(
+              Selector("@e", {
+                type: "minecraft:armor_stand",
+                tag: "block_placer",
+              })
+            )
+            .at(self)
+            .run(() => {
+              execute
+                .facingEntity(
+                  Selector("@e", {
+                    type: "minecraft:marker",
+                    tag: "inverted_tnt_anchor",
+                  }),
+                  "feet"
+                )
+                .run(() => {
+                  tp(rel(0, 0, 0));
+                });
+              for (let i = 0; i < 13; i++) {
+                tpAhead();
+              }
+              kill(self);
+            });
         },
         null,
         null
